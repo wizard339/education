@@ -58,7 +58,13 @@ def large_order_promo(order):
         return order.total() * .07
     return 0
         
-        
+
+promos = [fidelity_promo, bulk_item_promo, large_order_promo]
+
+def best_promo(order):
+    '''Выбрать максимально возможную скидку'''
+    return max(promo(order) for promo in promos)
+
 if __name__ == '__main__':
     joe = Customer('John Doe', 0)
     ann = Customer('Ann Smith', 1100)
@@ -73,3 +79,6 @@ if __name__ == '__main__':
     long_order = [LineItem(str(item_code), 1, 1.0) for item_code in range(10)]
     print(Order(joe, long_order, large_order_promo))
     print(Order(joe, cart, large_order_promo))
+    print(Order(joe, long_order, best_promo))
+    print(Order(joe, banana_cart, best_promo))
+    print(Order(ann, cart, best_promo))
