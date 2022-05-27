@@ -1,11 +1,12 @@
 def make_averager():
-    series = [] # свободная переменная
+    count = 0
+    total = 0
     
     def averager(new_value):
-        # замыкание averager расширяет область видимости функции, включая в нее привязку свободной переменной series
-        series.append(new_value) 
-        total = sum(series)
-        return total/len(series)
+        nonlocal count, total
+        count += 1
+        total += new_value
+        return total/count
     
     return averager
     
