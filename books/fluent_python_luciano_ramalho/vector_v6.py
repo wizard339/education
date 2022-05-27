@@ -183,7 +183,27 @@ class Vector:
         '<4.000e+00, 1.047e+00, 9.553e-01, 7.854e-01>'
         >>> format(Vector([0, 1, 0, 0]), '0.5fh')
         '<1.00000, 1.57080, 0.00000, 0.00000>'
-
+        
+    Tests of ``__pos__``, ``__neg__``::
+    
+        >>> v1 = Vector([1, 2, 3])
+        >>> v2 == +v2
+        True
+        >>> neg_v = Vector([-1, -2, -3])
+        >>> -v1 == neg_v
+        True
+        
+    Tests of ``__add__``::
+    
+        >>> v1 = Vector([1, 2, 3])
+        >>> v2 = Vector([3, 4, 5])
+        >>> v1 + v2
+        Vector([4.0, 6.0, 8.0])
+        >>> v3 = Vector([-1, -2, -3, 5, 5])
+        >>> v3 + v1
+        Vector([0.0, 0.0, 0.0, 5.0, 5.0])
+        >>> v1 + (10, 20, 30)
+        Vector([11.0, 22.0, 33.0])
     """
     
     typecode = 'd'
@@ -221,6 +241,10 @@ class Vector:
         
     def __pos__(self):
         return Vector(self)
+    
+    def __add__(self, other):
+        pairs = itertools.zip_longest(self, other, fillvalue=0.0)
+        return Vector(a + b for a, b in pairs)
     
     def __bool__(self):
         return bool(abs(self))
