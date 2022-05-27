@@ -234,6 +234,20 @@ class Vector:
         Traceback (most recent call last):
          ...
         TypeError: unsupported operand type(s) for @: 'Vector' and 'int'
+        
+    Tests for ``__eq__``::
+        
+        >>> va = Vector([1.0, 2.0, 3.0])
+        >>> vb = Vector(range(1, 4))
+        >>> va == vb
+        True
+        >>> t3 = (1, 2, 3)
+        >>> va == t3
+        False
+        >>> va != vb
+        False
+        >>> va != (1, 2, 3)
+        True
     """
     
     typecode = 'd'
@@ -257,7 +271,10 @@ class Vector:
                 bytes(self._components))
      
     def __eq__(self, other):
-        return len(self) == len(other) and all( a == b for a, b in zip(self, other))
+        if isinstance(other, Vector):
+            return len(self) == len(other) and all( a == b for a, b in zip(self, other))
+        else:
+            return NotImplemented
         
     def __hash__(self):
         hashes = (hash(x) for x in self._components)
