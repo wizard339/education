@@ -221,6 +221,19 @@ class Vector:
         >>> from fractions import Fraction
         >>> v1 * Fraction(1, 3)
         Vector([0.3333333333333333, 0.6666666666666666, 1.0])
+        
+    Tests for ``__matmul__``, ``__rmatmul__``::
+        
+        >>> va = Vector([1, 2, 3])
+        >>> vz = Vector([5, 6, 7])
+        >>> va @ vz == 38.0
+        True
+        >>> [10, 20, 30] @ vz
+        380.0
+        >>> va @ 3
+        Traceback (most recent call last):
+         ...
+        TypeError: unsupported operand type(s) for @: 'Vector' and 'int'
     """
     
     typecode = 'd'
@@ -277,6 +290,15 @@ class Vector:
     
     def __rmul__(self, scalar):
         return self * scalar
+    
+    def __matmul__(self, other):
+        try:
+            return sum(a * b for a, b in zip(self, other))
+        except TypeError:
+            return NotImplemented
+            
+    def __rmatmul__(self, other):
+        return self @ other
     
     def __bool__(self):
         return bool(abs(self))
