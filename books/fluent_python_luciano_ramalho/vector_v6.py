@@ -204,6 +204,8 @@ class Vector:
         Vector([0.0, 0.0, 0.0, 5.0, 5.0])
         >>> v1 + (10, 20, 30)
         Vector([11.0, 22.0, 33.0])
+        >>> (10, 20, 30) + v1 == Vector([11.0, 22.0, 33.0])
+        True
     """
     
     typecode = 'd'
@@ -245,6 +247,9 @@ class Vector:
     def __add__(self, other):
         pairs = itertools.zip_longest(self, other, fillvalue=0.0)
         return Vector(a + b for a, b in pairs)
+    
+    def __radd__(self, other):
+        return self + other
     
     def __bool__(self):
         return bool(abs(self))
