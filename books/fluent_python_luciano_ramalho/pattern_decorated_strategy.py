@@ -15,7 +15,7 @@ class LineItem:
         return self.price * self.quantity
         
 
-class Order: # Контекст
+class Order: # context
     
     def __init__(self, customer, cart, promotion=None):
         self.customer = customer
@@ -46,12 +46,12 @@ def promotion(promo_func):
 
 @promotion
 def fidelity_promo(order):
-    '''5 %-ая скидка для заказчиков, имющих не менее 1000 баллов лояльности'''
+    '''5 % discount for customers with at least 1000 loyalty points'''
     return order.total() * .05 if order.customer.fidelity >= 1000 else 0
 
 @promotion
 def bulk_item_promo(order):
-    '''10 %-ая скидка для каждой позиции LineItem, в которой заказано не менее 20 единиц'''
+    '''10 % discount for every position LineItem in which at least 20 units are ordered'''
     discount = 0
     for item in order.cart:
         if item.quantity >= 20:
@@ -60,14 +60,14 @@ def bulk_item_promo(order):
 
 @promotion        
 def large_order_promo(order):
-    '''7 %-ая скидка для заказов, включающих не менее 10 различных позиций'''
+    '''7 % discount for orders with at least 10 different line items'''
     distinct_items = {item.product for item in order.cart}
     if len(distinct_items) >= 10:
         return order.total() * .07
     return 0
         
 def best_promo(order):
-    '''Выбрать максимально возможную скидку'''
+    '''Choose the maximum possible discount'''
     return max(promo(order) for promo in promos)
 
 if __name__ == '__main__':
