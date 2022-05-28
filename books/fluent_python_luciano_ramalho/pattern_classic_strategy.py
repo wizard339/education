@@ -15,7 +15,7 @@ class LineItem:
         return self.price * self.quantity
         
 
-class Order: # Контекст
+class Order: # context
     
     def __init__(self, customer, cart, promotion=None):
         self.customer = customer
@@ -39,22 +39,22 @@ class Order: # Контекст
         return fmt.format(self.total(), self.due())
         
 
-class Promotion(ABC): # Стратегия: абстрактный базовый класс
+class Promotion(ABC): # Strategy: abstract base class
 
     @abstractmethod
     def discount(self, order):
-        '''Вернуть скидку в виде положительной суммы в долларах'''
+        '''Return the discount in the form of a positive amount in dollars'''
         
 
 class FidelityPromo(Promotion): # first concrete strategy
-    '''5 %-ая скидка для заказчиков, имеющих не менее 1000 баллов лояльности'''
+    '''5 % discount for customers with at least 1000 loyalty points'''
     
     def discount(self, order):
         return order.total() * .05 if order.customer.fidelity >= 1000 else 0
         
 
 class BulkItemPromo(Promotion): # second concrete strategy
-    '''10 %-ая скидка для каждой позиции LineItem, в которой заказано не менее 20 единиц'''
+    '''10 % discount for every position LineItem in which at least 20 units are ordered'''
     
     def discount(self, order):
         discount = 0
@@ -65,7 +65,7 @@ class BulkItemPromo(Promotion): # second concrete strategy
         
         
 class LargeOrderPromo(Promotion): # third concrete strategy
-    '''7 %-ая скидка для заказов, включающих не менее 10 различных позиций'''
+    '''7 % discount for orders with at least 10 different line items'''
     
     def discount(self, order):
         distinct_items = {item.product for item in order.cart}
