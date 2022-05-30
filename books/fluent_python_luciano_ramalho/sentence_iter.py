@@ -1,9 +1,29 @@
 import re
 import reprlib
+import doctest
 
 RE_WORD = re.compile('\w+')
 
 class Sentence:
+    
+    """
+    class ``Sentence``
+    
+        >>> s = Sentence('"The time has come," the Walrus said,')
+        >>> s
+        Sentence('"The time ha... Walrus said,')
+        >>> for word in s:
+        ...     print(word)
+        The
+        time
+        has
+        come
+        the
+        Walrus
+        said
+        >>> list(s)
+        ['The', 'time', 'has', 'come', 'the', 'Walrus', 'said']
+    """
     
     def __init__(self, text):
         self.text = text
@@ -34,9 +54,4 @@ class SentenceIterator:
         return self
         
 if __name__=='__main__':
-    s = Sentence('"The time has come," the Walrus ssad')
-    print(s)
-    for word in s:
-        print(word)
-    print(list(s))
-        
+    doctest.testmod(verbose=True)
