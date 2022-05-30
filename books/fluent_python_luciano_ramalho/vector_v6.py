@@ -10,7 +10,7 @@ import itertools
 class Vector:
     
     """
-    Многомерный класс ``Vector``
+    Multidimensional class ``Vector``
     ``Vector`` is built from an iterable of numbers::
     
         >>> Vector([3.1, 4.2])
