@@ -1,7 +1,7 @@
 import doctest
 
 """
-    A coroutine ro compute a runng average
+    A coroutine to compute a running average
     
         >>> coro_avg = averager()
         >>> from inspect import getgeneratorstate
