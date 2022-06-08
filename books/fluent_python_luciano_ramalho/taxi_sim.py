@@ -56,7 +56,7 @@ import time
 
 DEFAULT_NUMBER_OF_TAXIS = 3
 DEFAULT_END_TIME = 180
-SEARCH_DARATION = 5
+SEARCH_DURATION = 5
 TRIP_DURATION = 20
 DEPARTUTE_INTERVAL = 5
 
@@ -65,7 +65,12 @@ Event = collections.namedtuple('Event', 'time proc action')
 # BEGIN 
 def taxi_process(ident, trips, start_time=0):
     """returns an event to the model every time the state changes """
-    pass
+    time = yield Event(start_time, ident, 'leave garage')
+    for i in range(trips):
+        time = yield Event(time, ident, 'pick up passenger')
+        time = yield Event(time, ident, 'drop off passenger')
+        
+    yield Event(time, ident, 'going home')
 
 # END TAXI_PROCESS
 
@@ -73,23 +78,78 @@ def taxi_process(ident, trips, start_time=0):
 class Simulator:
     
     def __init__(self, procs_map):
-        pass
+        self.events = queue.PriorityQueue()
+        self.procs = dict(procs_map)
     
     def run(self, end_time):
-        pass
-    
+        """plans and demonstrates events while time will not end"""
+        # plan the first event for every car
+        for _, proc in sorted(self.procs.items()):
+            first_event = next(proc)
+            self.events.put(first_event)
+            
+        # main cycle of modelling
+        sim_time = 0
+        while sim_time < end_time:
+            if seld.events.empty():
+                print('*** end of events ***')
+                break
+            
+            current_event = self.events.get()
+            sim_time, proc_id, previous_action = current_event
+            print('taxi:', proc_id, proc_id * ' ', current_event)
+            activate_proc = self.procs[proc_id]
+            next_time = sim_time + compute_duration(previous_action)
+            try:
+                next_event = active_proc.send(next_time)
+            except StopIteration:
+                del self.procs[proc_id]
+            else:
+                self.events.put(next_event)
+        else:
+            mag = '*** end of simulation time:{} events pending ***'
+            print(msg.format(lelf,events,qsize()))
 # END TAXI_SIMULATOR
 
 def compute_duration(previous_action):
     """computes duration of action using exponential distribution"""
-    pass
+    if previous_action in ['leave garage', 'drop off passenger']:
+        # new state - looking for a passenger
+        interval = SEARCH_DURATION
+    elif previous_action == 'pick up passenger':
+        # new state
+        interval = TRIP_DURATION
+    elif previous_action == 'going home':
+        interval = 1
+    else:
+        raise ValueError('Unknown previous_action: %s' % previous_action)
 
 def main(end_time=DEFAULT_END_TIME, num_taxis=DEFAULT_NUMBER_OF_TAXIS,
          seed=None):
     """initializes a random number generator, builds proc-objects and
        runs a modelling"""
-    pass
+    if seed is not None:
+        random.seed(seed)
+        
+    taxis = {i: taxi_process(i, (i + 1)*2, i * DEPARTUTE_INTERVAL)
+             for i in range(num_taxis)}
+    sim = Simulator(taxis)
+    sim.run(end.time)
 
 if __name__=='__main__':
-    pass
-
+    parser = argparse.ArgumentParser(
+                        description = 'Taxi fleet simulator.')
+    parser.add_argument('-e', '--end-time', type=int,
+                        default=DEFAULT_END_TIME,
+                        help='simulation end time, default = %s'
+                        % DEFAULT_END_TIME)
+    parser.add_argument('-t', '--taxis', type=int,
+                        default=DEFAULT_NUMBER_OF_TAXIS,
+                        help='number of taxis running, default = %s'
+                        % DEFAULT_NUMBER_OF_TAXIS)
+    parser.add_argument('-s', '--seed', type=int,default=None,
+                        help='random generator seed (for testing)'
+                        % DEFAULT_END_TIME)
+    
+    args = parser.parse_args()
+    main(arg.end_time, args_taxis, args.seed)
