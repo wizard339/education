@@ -97,10 +97,10 @@ class Simulator:
             current_event = self.events.get()
             sim_time, proc_id, previous_action = current_event
             print('taxi:', proc_id, proc_id * '   ', current_event)
-            activate_proc = self.procs[proc_id]
+            active_proc = self.procs[proc_id]
             next_time = sim_time + compute_duration(previous_action)
             try:
-                next_event = activate_proc.send(next_time)
+                next_event = active_proc.send(next_time)
             except StopIteration:
                 del self.procs[proc_id]
             else:
