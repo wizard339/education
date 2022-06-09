@@ -58,7 +58,7 @@ DEFAULT_NUMBER_OF_TAXIS = 3
 DEFAULT_END_TIME = 180
 SEARCH_DURATION = 5
 TRIP_DURATION = 20
-DEPARTUTE_INTERVAL = 5
+DEPARTURE_INTERVAL = 5
 
 Event = collections.namedtuple('Event', 'time proc action')
 
@@ -131,7 +131,7 @@ def main(end_time=DEFAULT_END_TIME, num_taxis=DEFAULT_NUMBER_OF_TAXIS,
     if seed is not None:
         random.seed(seed)
         
-    taxis = {i: taxi_process(i, (i + 1)*2, i * DEPARTUTE_INTERVAL)
+    taxis = {i: taxi_process(i, (i + 1)*2, i * DEPARTURE_INTERVAL)
              for i in range(num_taxis)}
     sim = Simulator(taxis)
     sim.run(end_time)
