@@ -26,30 +26,30 @@ Driving a taxi from the console::
 Simple run with two cars, random seed 10. This is a valid doctest::
 
     >>> main(num_taxis=2, seed=10)
-    taxi: 0 Event(time=0, proc=0, action='leave garage')
-    taxi: 0 Event(time=5, proc=0, action='pick up passenger')
+    taxi: 0  Event(time=0, proc=0, action='leave garage')
+    taxi: 0  Event(time=5, proc=0, action='pick up passenger')
     taxi: 1     Event(time=5, proc=1, action='leave garage')
     taxi: 1     Event(time=10, proc=1, action='pick up passenger')
-    taxi: 1 Event(time=15, proc=1, action='drop off passenger')
-    taxi: 0     Event(time=17, proc=0, action='drop off passenger')
-    taxi: 1 Event(time=24, proc=1, action='pick up passenger')
-    taxi: 0 Event(time=26, proc=0, action='pick up passenger')
-    taxi: 0 Event(time=30, proc=0, action='drop off passenger')
-    taxi: 0     Event(time=34, proc=0, action='going home')
+    taxi: 1     Event(time=15, proc=1, action='drop off passenger')
+    taxi: 0  Event(time=17, proc=0, action='drop off passenger')
+    taxi: 1     Event(time=24, proc=1, action='pick up passenger')
+    taxi: 0  Event(time=26, proc=0, action='pick up passenger')
+    taxi: 0  Event(time=30, proc=0, action='drop off passenger')
+    taxi: 0  Event(time=34, proc=0, action='going home')
     taxi: 1     Event(time=46, proc=1, action='drop off passenger')
     taxi: 1     Event(time=48, proc=1, action='pick up passenger')
     taxi: 1     Event(time=110, proc=1, action='drop off passenger')
     taxi: 1     Event(time=139, proc=1, action='pick up passenger')
     taxi: 1     Event(time=140, proc=1, action='drop off passenger')
     taxi: 1     Event(time=150, proc=1, action='going home')
-    *** end of values ***
+    *** end of events ***
     
 See longer sample run at the end of this module.
     
 """
-
+import doctest
 import random
-import collection
+import collections
 import queue
 import argparse
 import time
@@ -71,7 +71,6 @@ def taxi_process(ident, trips, start_time=0):
         time = yield Event(time, ident, 'drop off passenger')
         
     yield Event(time, ident, 'going home')
-
 # END TAXI_PROCESS
 
 # BEGIN TAXI_SIMULATOR
@@ -91,24 +90,24 @@ class Simulator:
         # main cycle of modelling
         sim_time = 0
         while sim_time < end_time:
-            if seld.events.empty():
+            if self.events.empty():
                 print('*** end of events ***')
                 break
             
             current_event = self.events.get()
             sim_time, proc_id, previous_action = current_event
-            print('taxi:', proc_id, proc_id * ' ', current_event)
+            print('taxi:', proc_id, proc_id * '   ', current_event)
             activate_proc = self.procs[proc_id]
             next_time = sim_time + compute_duration(previous_action)
             try:
-                next_event = active_proc.send(next_time)
+                next_event = activate_proc.send(next_time)
             except StopIteration:
                 del self.procs[proc_id]
             else:
                 self.events.put(next_event)
         else:
-            mag = '*** end of simulation time:{} events pending ***'
-            print(msg.format(lelf,events,qsize()))
+            msg = '*** end of simulation time:{} events pending ***'
+            print(msg.format(self.events.qsize()))
 # END TAXI_SIMULATOR
 
 def compute_duration(previous_action):
@@ -123,6 +122,7 @@ def compute_duration(previous_action):
         interval = 1
     else:
         raise ValueError('Unknown previous_action: %s' % previous_action)
+    return int(random.expovariate(1/interval)) + 1
 
 def main(end_time=DEFAULT_END_TIME, num_taxis=DEFAULT_NUMBER_OF_TAXIS,
          seed=None):
@@ -134,11 +134,11 @@ def main(end_time=DEFAULT_END_TIME, num_taxis=DEFAULT_NUMBER_OF_TAXIS,
     taxis = {i: taxi_process(i, (i + 1)*2, i * DEPARTUTE_INTERVAL)
              for i in range(num_taxis)}
     sim = Simulator(taxis)
-    sim.run(end.time)
+    sim.run(end_time)
 
 if __name__=='__main__':
     parser = argparse.ArgumentParser(
-                        description = 'Taxi fleet simulator.')
+                        description='Taxi fleet simulator.')
     parser.add_argument('-e', '--end-time', type=int,
                         default=DEFAULT_END_TIME,
                         help='simulation end time, default = %s'
@@ -147,9 +147,9 @@ if __name__=='__main__':
                         default=DEFAULT_NUMBER_OF_TAXIS,
                         help='number of taxis running, default = %s'
                         % DEFAULT_NUMBER_OF_TAXIS)
-    parser.add_argument('-s', '--seed', type=int,default=None,
-                        help='random generator seed (for testing)'
-                        % DEFAULT_END_TIME)
+    parser.add_argument('-s', '--seed', type=int, default=None,
+                        help='random generator seed (for testing)')
     
     args = parser.parse_args()
-    main(arg.end_time, args_taxis, args.seed)
+    main(args.end_time, args.taxis, args.seed)
+    doctest.testmod(verbose=True)
