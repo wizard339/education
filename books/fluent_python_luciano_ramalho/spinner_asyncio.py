@@ -19,17 +19,16 @@ async def spin(msg):
     write(' ' * len(status) + '\x08' * len(status))
 
 
-# slow_function() now is coroutine in which `await` is used so
-# that the event loop can continue to run while coroutine is sleeping
-# simulating I/O
+# slow_function() now is coroutine in which `await` is used so that the event
+# loop can continue to run while coroutine is sleeping simulating I/O
 async def slow_function():
     await asyncio.sleep(3)
     return 42
 
 
 async def supervisor():
-    # asyncio.ensure_future() shedules the execution of coroutine
-    # `spin` by wrapping it with a `Task` object, which returns immediately
+    # asyncio.ensure_future() shedules the execution of coroutine `spin`
+    # by wrapping it with a `Task` object, which returns immediately
     spinner = asyncio.ensure_future(spin('thinking!'))
     print('spinner oblect:', spinner)
     result = await slow_function()
