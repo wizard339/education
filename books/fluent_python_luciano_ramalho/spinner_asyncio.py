@@ -30,7 +30,7 @@ async def supervisor():
     # asyncio.ensure_future() shedules the execution of coroutine `spin`
     # by wrapping it with a `Task` object, which returns immediately
     spinner = asyncio.ensure_future(spin('thinking!'))
-    print('spinner oblect:', spinner)
+    print('spinner object:', spinner)
     result = await slow_function()
     spinner.cancel()
     return result
