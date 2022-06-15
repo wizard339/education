@@ -23,8 +23,7 @@ def spin(msg, signal):
 
 
 def slow_function():
-    # simulate waiting for the completion of a lengthy
-    # I/O operation
+    # simulate waiting for the completion of a lengthy I/O operation
     time.sleep(5)
     return 42
 
