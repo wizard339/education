@@ -1,4 +1,3 @@
-import doctest
 import warnings
 
 import osconfeed
@@ -8,19 +7,6 @@ CONFERENCE = 'conference.115'
 
 
 class Record:
-    """
-    Tests for doctest:
-        >>> import shelve
-        >>> db = shelve.open(DB_NAME)
-        >>> if CONFERENCE not in db:
-        ...    load_db(db)
-        >>> speaker = db['speaker.3471']
-        >>> type(speaker)
-        <class '__main__.Record'>
-        >>> speaker.name, speaker.twitter
-        ('Anna Martelli Ravenscroft', 'annaraven')
-        >>> db.close()
-    """
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
@@ -33,8 +19,3 @@ def load_db(db):
             key = '{}.{}'.format(record_type, record['serial'])
             record['serial'] = key
             db[key] = Record(**record)
-            
-
-if __name__ == '__main__':
-    doctest.testmod(verbose=True)
-    
