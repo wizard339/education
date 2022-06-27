@@ -43,6 +43,42 @@ def insertion_sort(arr, ascending=True, inplace=True):
     return res_arr
 
 
+def insertion_binary_sort(arr, inplace=True):
+    res_arr = list(arr) if not inplace else arr
+    for j in range(1, len(res_arr)):
+        i = j - 1
+        key = res_arr[j]
+        loc = bin_search(res_arr[:j], key)
+
+        # Move all elements after location to create space
+        while i >= loc:
+            res_arr[i + 1] = res_arr[i]
+            i -= 1
+        res_arr[i + 1] = key
+
+    return res_arr
+
+
+def bin_search(arr, x):
+    """
+    It is the specisal realization of the binary search for using in the insertion sorting.
+    The peculiarity of the implementation is that if the search fails, the function returns the left bound.
+    """
+    l = 0
+    r = len(arr) - 1
+
+    while l <= r:
+        mid = (l + r) // 2
+        if x == arr[mid]:
+            return mid
+        elif x < arr[mid]:
+            r = mid - 1
+        elif x > arr[mid]:
+            l = mid + 1
+
+    return l
+
+
 if __name__ == '__main__':
     initial_seq = [31, 41, 59, 26, 41, 58]
     print('Initial sequence: ', initial_seq)
@@ -52,3 +88,6 @@ if __name__ == '__main__':
 
     result_seq_desc = insertion_sort(initial_seq, ascending=False)
     print(f'Sorted sequence by descending: {result_seq_desc}')
+
+    result_seq_ins_bin = insertion_binary_sort(initial_seq)
+    print(f'Sorted sequence by insertion-binary-sort: {result_seq_ins_bin}')
