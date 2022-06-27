@@ -1,4 +1,13 @@
 def merge_sort(arr, p, r):
+    """
+    The algorithm uses the "divide and conquer" method. First, the array is split
+    into two smaller halves, then each of them is sorted separately. After that,
+    two ordered arrays are connected
+    -------------
+    Input::  `arr` is an array with numbers;
+             `p` and `r` are bounds of merged parts.
+    Output:: a sorted array with numbers
+    """
     if p < r:
         q = (p + r) // 2
         merge_sort(arr, p, q)
