@@ -3,34 +3,38 @@ def parent(i):
 
 
 def left(i):
-    return 2*i
-
-
-def right(i):
     return 2*i + 1
 
 
-def heap_size(arr):
-    return len(arr)
+def right(i):
+    return 2*i + 2
 
 
 def heapify(arr, i):
     l = left(i)
     r = right(i)
-    if l <= heap_size(arr) and arr[l] > arr[i]:
+    if l <= heap_size and arr[l] > arr[i]:
         largest = l
     else:
         largest = i
-    if r <= heap_size(arr) and arr[r] > arr[largest]:
+    if r <= heap_size and arr[r] > arr[largest]:
         largest = r
     if largest != i:
-        arr[i], arr[largest] = arr[largest], arr[i]
+        tmp = arr[largest]
+        arr[largest] = arr[i]
+        arr[i] = tmp
         heapify(arr, largest)
-    return arr
+
+
+def build_heap(arr):
+    global heap_size
+    heap_size = len(arr) - 1
+    for i in range((len(arr) // 2), -1, -1):
+        heapify(arr, i)
 
 
 if __name__ == '__main__':
     a = [27, 17, 3, 16, 13, 10, 1, 5, 7, 12, 4, 8, 9, 0]
-    a = heapify(a, 3)
+    build_heap(a)
     print(a)
     
