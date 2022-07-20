@@ -1,4 +1,4 @@
-class Heapsort:
+class BinHeap:
 
     def __init__(self):
         self.arr = []
@@ -47,7 +47,7 @@ class Heapsort:
 
 if __name__ == '__main__':
     a = [27, 17, 3, 16, 13, 10, 1, 5, 7, 12, 4, 8, 9, 0]
-    h_sort = Heapsort()
+    h_sort = BinHeap()
     h_sort.build_heap(a)
     print(a)
     h_sort.heapsort(a)
