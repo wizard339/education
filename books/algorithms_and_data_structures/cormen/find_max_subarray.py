@@ -17,6 +17,10 @@ def find_max_crossing_subarray(arr, low, mid, high):
 
 
 def find_max_subarray(arr, low, high):
+    """
+    the version of the algorithm based on the 'devide and conquere' method is executed 
+    in O(n*lg(n)) time
+    """
     if high == low:
         return (low, high, arr[low])
 
@@ -33,7 +37,31 @@ def find_max_subarray(arr, low, high):
             return (cross_low, cross_high, cross_sum)
 
 
+def find_max_subarray_fast(arr):
+    """
+    the version of the algorithm based on the dynamic programming method is executed in
+    linear time O(n)
+    """
+    cur_sum = arr[0]
+    max_sum = arr[0]
+    # bounds of the maximum subarray
+    low, high = 0, 0
+
+    for i in range(1, len(arr)):
+        if cur_sum > 0:
+            cur_sum += arr[i]
+            if cur_sum > max_sum:
+                max_sum = cur_sum
+                high = i
+        else:
+            cur_sum = arr[i]
+            low = i
+    return (low, high, max_sum)
+    
+
+
 if __name__ == '__main__':
     a = [1, 5, -5, 17, -14, 5, -1]
     print(find_max_subarray(a, 0, len(a) - 1))
-   
+    print(find_max_subarray_fast(a))
+    
