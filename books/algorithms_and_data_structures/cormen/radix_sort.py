@@ -16,8 +16,8 @@ def counting_sort_for_radix(arr, place_value):
 
     for i in range(input_size - 1, -1, -1):
         place_el = (arr[i] // place_value) % 10
-        result_arr[counts_arr[place_el] - 1] = arr[i]
         counts_arr[place_el] -= 1
+        result_arr[counts_arr[place_el]] = arr[i]
 
     return result_arr
 
