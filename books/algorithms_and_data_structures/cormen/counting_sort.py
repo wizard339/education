@@ -14,8 +14,9 @@ def counting_sort(arr):
     # now counts_arr[i] contains the number of elements not exceeding i
     
     for j in range(len(arr) - 1, -1, -1):
-        result_arr[counts_arr[arr[j]] - 1] = arr[j]
         counts_arr[arr[j]] -= 1
+        result_arr[counts_arr[arr[j]]] = arr[j]
+        
         
     return result_arr
 
