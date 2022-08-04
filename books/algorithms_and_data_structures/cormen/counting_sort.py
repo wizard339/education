@@ -1,19 +1,24 @@
-def counting_sort(A, B, k):
-    C = [0] * k
-    for j in range(len(A)):
-        C[A[j]] = C[A[j]] + 1
-    # now C[i] contains the number of elements equal to i
-    for i in range(1, k):
-        C[i] = C[i] + C[i - 1]
-    # now C[i] contains the number of elements not exceeding i
-    for j in range(len(A) - 1, -1, -1):
-        B[C[A[j]] - 1] = A[j]
-        C[A[j]] = C[A[j]] - 1
+def counting_sort(arr):
+    k = max(arr)
+    # creating an array to store the number of elements
+    counts_arr = [0] * (k + 1)
+    # creating an array to store the sorted sequence
+    result_arr = [0] * len(arr)
+    
+    for j in range(len(arr)):
+        counts_arr[arr[j]] += 1
+    # now counts_arr[j] contains the number of elements equal to j
 
+    for i in range(1, k + 1):
+        counts_arr[i] += counts_arr[i - 1]
+    # now counts_arr[i] contains the number of elements not exceeding i
+    
+    for j in range(len(arr) - 1, -1, -1):
+        result_arr[counts_arr[arr[j]] - 1] = arr[j]
+        counts_arr[arr[j]] -= 1
+        
+    return result_arr
 
 if __name__ == '__main__':
     a = [4, 8, 3, 1, 5, 5]
-    b = [0] * len(a)
-    counting_sort(a, b, 10)
-    print(b)
-    
+    print(counting_sort(a))
