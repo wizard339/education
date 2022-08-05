@@ -26,7 +26,9 @@ def insertion_sort(arr, ascending=True, inplace=True):
 
     # if `inplace=False` then we create a copy of list
     res_arr = list(arr) if not inplace else arr
-
+    if len(res_arr) == 1:
+        return res_arr
+    
     for j in range(1, len(res_arr)):
         key = res_arr[j]
         # add `arr[j]` to the sorted part `arr[1...j - 1]`
