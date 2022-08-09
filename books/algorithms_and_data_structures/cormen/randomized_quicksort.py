@@ -1,8 +1,9 @@
 from random import randint
 
 
-def partition(arr, p, r):
-    # the partitioning algorithm developed by C.A.R. Hoare
+def randomized_partition(arr, p, r):
+    i = randint(p, r)
+    arr[p], arr[i] = arr[i], arr[p]
     x = arr[p]
     i = p - 1
     j = r + 1
@@ -17,12 +18,6 @@ def partition(arr, p, r):
             arr[i], arr[j] = arr[j], arr[i]
         else:
             return j
-
-
-def randomized_partition(arr, p, r):
-    i = randint(p, r)
-    arr[p], arr[i] = arr[i], arr[p]
-    return partition(arr, p, r)
 
 
 def randomized_quicksort(arr, p, r):
