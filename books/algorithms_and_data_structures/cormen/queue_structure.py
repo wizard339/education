@@ -8,12 +8,15 @@ class Queue:
         self.size = 0
 
     def queue_empty(self):
+        """method for checking for emptiness of the queue"""
         return self.size == 0
 
     def queue_full(self):
+        """method for checking the completeness of the queue"""
         return self.size == self.length
     
     def enqueue(self, x):
+        """method of inserting an item into the queue"""
         if self.queue_full():
             print('The queue is full!')
             return
@@ -23,6 +26,7 @@ class Queue:
         print(f'Added value: {x}')
 
     def dequeue(self):
+        """method of removing an item from the queue"""
         if self.queue_empty():
             print('The queue is empty!')
             return None
@@ -33,6 +37,7 @@ class Queue:
         return x
 
     def peek(self):
+        """method of getting the first item from the queue without deleting it"""
         if self.queue_empty():
             print('The queue is empty!')
             return
