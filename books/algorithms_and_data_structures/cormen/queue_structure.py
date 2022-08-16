@@ -1,5 +1,4 @@
 class Queue:
-
     def __init__(self, n=100):
         self.queue = [None] * n
         self.length = n
