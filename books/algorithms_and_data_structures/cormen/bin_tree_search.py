@@ -50,6 +50,13 @@ class BinTreeSearch:
         else:
             parent.right = new_node
 
+    def inorder_walk(self, root):
+        current = root
+        if current:
+            self.inorder_walk(current.left)
+            print(current.key)
+            self.inorder_walk(current.right)
+
     def delete(self):
         pass
 
@@ -66,4 +73,4 @@ if __name__=='__main__':
 
     
     print(b.search(10))
-    
+    b.inorder_walk(b.root)
