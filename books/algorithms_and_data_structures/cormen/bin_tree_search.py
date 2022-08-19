@@ -20,13 +20,14 @@ class BinTreeSearch:
     def __init__(self) -> None:
         self.root: Optional["Node"] = None
 
-    def search(self, k):
-        if self.root is None or k == self.key:
-            return self.root.data
-        if k < self.key:
-            return self.search(self.left, k)
-        else:
-            return self.search(self.right, k)
+    def search(self, key: Any) -> Optional["Node"]:
+        current = self.root
+        while current and key != current.key:
+            if key < current.key:
+                current = current.left
+            else:
+                current = current.right
+        return current
     
     def insert(self, key: Any, data: Any) -> None:
         new_node = Node(key=key, data=data)
@@ -56,8 +57,13 @@ class BinTreeSearch:
         pass
 
 if __name__=='__main__':
-    a = Node('First node', 10)
-    print(a)
     b = BinTreeSearch()
     b.insert(50, 'This is fifty')
+
+    b.insert(10, 'This is ten')
+
+    b.insert(70, 'This is seventy')
+
+    
+    print(b.search(10))
     
