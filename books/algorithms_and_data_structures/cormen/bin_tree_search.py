@@ -1,5 +1,5 @@
 import dataclasses
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 
 @dataclasses.dataclass
@@ -21,6 +21,7 @@ class BinTreeSearch:
         self.root: Optional["Node"] = None
 
     def search(self, key: Any) -> Optional["Node"]:
+        """the method gets the key and returns a pointer to the node with this key """
         current = self.root
         while current and key != current.key:
             if key < current.key:
@@ -50,7 +51,7 @@ class BinTreeSearch:
         else:
             parent.right = new_node
 
-    def inorder_walk(self, root):
+    def inorder_walk(self, root: Optional["Node"]) -> None:
         current = root
         if current:
             self.inorder_walk(current.left)
@@ -60,17 +61,25 @@ class BinTreeSearch:
     def delete(self):
         pass
 
-    def minimum(self):
-        pass
+    def minimum(self, root: Optional["Node"]) -> Optional["Node"]:
+        """the method returns a pointer to the minimum element of the subtree"""
+        while root.left:
+            root = root.left
+        return root
+
+    def maximum(self, root: Optional["Node"]) -> Optional["Node"]:
+        """the method returns a pointer to the maximum element of the subtree"""
+        while root.right:
+            root = root.right
+        return root
+        
 
 if __name__=='__main__':
     b = BinTreeSearch()
     b.insert(50, 'This is fifty')
-
     b.insert(10, 'This is ten')
-
     b.insert(70, 'This is seventy')
-
-    
     print(b.search(10))
     b.inorder_walk(b.root)
+    print(b.minimum(b.root))
+    
