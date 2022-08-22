@@ -61,25 +61,56 @@ class BinTreeSearch:
     def delete(self):
         pass
 
-    def minimum(self, root: Optional["Node"]) -> Optional["Node"]:
+    def minimum(self, node: Optional["Node"]) -> Optional["Node"]:
         """the method returns a pointer to the minimum element of the subtree"""
-        while root.left:
-            root = root.left
-        return root
+        while node.left:
+            node = node.left
+        return node
 
-    def maximum(self, root: Optional["Node"]) -> Optional["Node"]:
+    def maximum(self, node: Optional["Node"]) -> Optional["Node"]:
         """the method returns a pointer to the maximum element of the subtree"""
-        while root.right:
-            root = root.right
-        return root
-        
+        while node.right:
+            node = node.right
+        return node
+
+    def successor(self, node: Optional["Node"]) -> Optional["Node"]:
+        """
+        the method gets a pointer to the node and returns a pointer to the
+        successor-node
+        """
+        if node.right:
+            return self.minimum(node.right)
+        res = node.parent
+        while res and node == res.right:
+            node = res
+            res = res.parent
+        return res
+
+    def predecessor(self, node: Optional["Node"]) -> Optional["Node"]:
+        """
+        the method gets a pointer to the node and returns a pointer to the
+        successor-node
+        """
+        if node.left:
+            return self.maximum(node.left)
+        res = node.parent
+        while res and node == res.left:
+            node = res
+            res = res.parent
+        return res
+
 
 if __name__=='__main__':
     b = BinTreeSearch()
     b.insert(50, 'This is fifty')
     b.insert(10, 'This is ten')
     b.insert(70, 'This is seventy')
-    print(b.search(10))
+    b.insert(15, 'This is fifteen')
+    b.insert(30, 'This is thirty')
+    b.insert(40, 'This is fourty')
+    b.insert(60, 'This is sixty')
+    b.insert(77, 'This is seventy seven')
     b.inorder_walk(b.root)
-    print(b.minimum(b.root))
-    
+
+    print(f'Successor of the node "50": {b.successor(b.search(50))}')
+    print(f'Predecessor of the node "50": {b.predecessor(b.search(50))}')
