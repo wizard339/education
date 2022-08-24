@@ -11,11 +11,6 @@ class Node:
     parent: Optional["Node"] = None
 
 
-class DuplicateKeyError(Exception):
-    def __init__(self, key: str) -> None:
-        Exception.__init__(self, f"{key} already exists.")
-
-
 class BinTreeSearch:
     def __init__(self) -> None:
         self.root: Optional["Node"] = None
@@ -38,10 +33,8 @@ class BinTreeSearch:
             parent = current
             if new_node.key < current.key:
                 current = current.left
-            elif new_node.key > current.key:
-                current = current.right
             else:
-                raise DuplicateKeyError(key=new_node.key)
+                current = current.right
         new_node.parent = parent
         # if tree is empty
         if parent is None:
