@@ -114,6 +114,73 @@ class RedBlackTree:
                     self.left_rotate(new_node.parent.parent)
         self.root.color = "black"
 
+
+    def transplant(self, deleting_node: Optional["Node"], replacing_node: Optional["Node"]) -> None:
+        """the method is needed to replace one subtree with another subtree"""
+        if deleting_node.parent == self.null:
+            self.root = replacing_node
+        elif deleting_node == deleting_node.parent.left:
+            deleting_node.parent.left = replacing_node
+        else:
+            deleting_node.parent.right = replacing_node
+        replacing_node.parent = deleting_node.parent
+
+    def minimum(self, node: Optional["Node"]) -> Optional["Node"]:
+        """the method returns a pointer to the minimum element of the subtree"""
+        while node.left:
+            node = node.left
+        return node
+
+    def maximum(self, node: Optional["Node"]) -> Optional["Node"]:
+        """the method returns a pointer to the maximum element of the subtree"""
+        while node.right:
+            node = node.right
+        return node
+
+    def delete(self, deleting_node: Optional["Node"]) -> None:
+        y = deleting_node
+        y_origin_color = y.color
+        if deleting_node.left == self.null:
+            x = deleting_node.right
+            self.transplant(deleting_node, deleting_node.right)
+        elif deleting_node.right == self.null:
+            x = deleting_node.left
+            self.transplant(deleting_node, deleting_node.left)
+        else:
+            y = self.minimum(deleting_node.right)
+            y_origin_color = y.color
+            x = y.right
+            if y.parent == deleting_node:
+                x.parent = y
+            else:
+                self.transplant(y, y.right)
+                y.right = deleting_node.right
+                y.right.parent = y
+            self.transplant(deleting_node, y)
+            y.left = deleting_node.left
+            y.left.parent = y
+            y.color = deleting_node.color
+        if y_origin_color == "black":
+            self.delete_fixup(x)
+
+    def delete_fixup(self, x: Optional["Node"]) -> None:
+        while x != self.null and x.color == "black":
+            if x == x.parent.left:
+                w = x.parent.right
+                # case 1
+                if w.color == "red":
+                    w.color = "black"
+                    x.parent.color = "red"
+                    self.left_rotate(x.parent)
+                    w = x.parent.right
+                # case 2
+                if w.left.color == "black" and w. right.color == "black":
+                    w.color = "red"
+                    x = x.parent
+                # case 3
+                elif w.right.color == "black":
+                    pass
+                    
     def inorder_walk(self, root: Optional["Node"]) -> None:
         current = root
         if current and current != self.null:
