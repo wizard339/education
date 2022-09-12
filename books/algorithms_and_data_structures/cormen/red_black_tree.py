@@ -125,17 +125,11 @@ class RedBlackTree:
             deleting_node.parent.right = replacing_node
         replacing_node.parent = deleting_node.parent
 
-    def minimum(self, node: Optional["Node"]) -> Optional["Node"]:
+    def minimum(self, x: Optional["Node"]) -> Optional["Node"]:
         """the method returns a pointer to the minimum element of the subtree"""
-        while node.left:
-            node = node.left
-        return node
-
-    def maximum(self, node: Optional["Node"]) -> Optional["Node"]:
-        """the method returns a pointer to the maximum element of the subtree"""
-        while node.right:
-            node = node.right
-        return node
+        while x.left != self.null:
+            x = x.left
+        return x
 
     def delete(self, deleting_node: Optional["Node"]) -> None:
         y = deleting_node
@@ -164,7 +158,8 @@ class RedBlackTree:
             self.delete_fixup(x)
 
     def delete_fixup(self, x: Optional["Node"]) -> None:
-        while x != self.null and x.color == "black":
+        """the method is necessary to preserve the red-black properties after deleting"""
+        while x != self.root and x.color == "black":
             if x == x.parent.left:
                 w = x.parent.right
                 # case 1
@@ -174,12 +169,48 @@ class RedBlackTree:
                     self.left_rotate(x.parent)
                     w = x.parent.right
                 # case 2
-                if w.left.color == "black" and w. right.color == "black":
+                if w.left.color == "black" and w.right.color == "black":
                     w.color = "red"
                     x = x.parent
                 # case 3
-                elif w.right.color == "black":
-                    pass
+                else:
+                    if w.right.color == "black":
+                        w.left.color = "black"
+                        w.color = "red"
+                        self.right_rotate(w)
+                        w = x.parent.right
+                    # case 4
+                    w.color = x.parent.color
+                    x.parent.color = "black"
+                    w.right.color = "black"
+                    self.left_rotate(x.parent)
+                    x = self.root
+            else:
+                w = x.parent.left
+                # case 1
+                if w.color == "red":
+                    w.color = "black"
+                    x.parent.color = "red"
+                    self.right_rotate(x.parent)
+                    w = x.parent.left
+                # case 2
+                if w.right.color == "black" and w.left.color == "black":
+                    w.color = "red"
+                    x = x.parent
+                # case 3
+                else:
+                    if w.left.color == "black":
+                        w.right.color = "black"
+                        w.color = "red"
+                        self.left_rotate(w)
+                        w = x.parent.left
+                    # case 4
+                    w.color = x.parent.color
+                    x.parent.color = "black"
+                    w.left.color = "black"
+                    self.right_rotate(x.parent)
+                    x = self.root
+        x.color = "black"
                     
     def inorder_walk(self, root: Optional["Node"]) -> None:
         current = root
@@ -188,6 +219,14 @@ class RedBlackTree:
             print(current.key)
             self.inorder_walk(current.right)
 
+    def search(self, key: Any) -> Optional["Node"]:
+        current = self.root
+        while current and key != current.key:
+            if key < current.key:
+                current = current.left
+            else:
+                current = current.right
+        return current
 
 if __name__=='__main__':
     b = RedBlackTree()
@@ -200,5 +239,12 @@ if __name__=='__main__':
     b.insert(60, 'This is sixty')
     b.insert(77, 'This is seventy seven')
 
+    b.inorder_walk(b.root)
+    print('Insertion completed')
+    
+    node_to_delete = b.search(30)
+    b.delete(node_to_delete)
+    print(f'Deleting the next element: {node_to_delete.key}')
+    
     b.inorder_walk(b.root)
     
