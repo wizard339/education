@@ -35,7 +35,10 @@ class OrderStatTree:
         y.left = x
         # placing x as the left child node
         x.parent = y
-            
+        # size support
+        y.size = x.size
+        x.size = x.left.size + x.right.size + 1
+
     def right_rotate(self, y: Optional["Node"]) -> None:
         """the method is needed to save property of the black-red tree"""
         x = y.left
@@ -51,7 +54,10 @@ class OrderStatTree:
             y.parent.left = x
         x.right = y
         y.parent = x
-    
+        # size support
+        x.size = y.size
+        y.size = x.right.size + y.right.size + 1
+
     def insert(self, key: Any, data: Any) -> None:
         new_node = Node(key=key, data=data)
         parent: Optional["Node"] = self.null
@@ -62,6 +68,8 @@ class OrderStatTree:
                 current = current.left
             else:
                 current = current.right
+            # size support
+            parent.size += 1
         new_node.parent = parent
         # if tree is empty
         if parent == self.null:
@@ -115,8 +123,8 @@ class OrderStatTree:
                     self.left_rotate(new_node.parent.parent)
         self.root.color = "black"
 
-
-    def transplant(self, deleting_node: Optional["Node"], replacing_node: Optional["Node"]) -> None:
+    def transplant(self, deleting_node: Optional["Node"],
+                   replacing_node: Optional["Node"]) -> None:
         """the method is needed to replace one subtree with another subtree"""
         if deleting_node.parent == self.null:
             self.root = replacing_node
@@ -155,6 +163,14 @@ class OrderStatTree:
             y.left = deleting_node.left
             y.left.parent = y
             y.color = deleting_node.color
+
+        # size support
+        while y != self.root:
+            y = y.parent
+            y.size -= 1
+        else:
+            self.root.size -= 1
+
         if y_origin_color == "black":
             self.delete_fixup(x)
 
@@ -212,7 +228,7 @@ class OrderStatTree:
                     self.right_rotate(x.parent)
                     x = self.root
         x.color = "black"
-                    
+
     def inorder_walk(self, root: Optional["Node"]) -> None:
         current = root
         if current and current != self.null:
@@ -234,19 +250,28 @@ class OrderStatTree:
         the method searches for an element with the i-rank and returns a pointer to the node
         with the i-th element in ascending order in the subtree, where x is the root
         """
-        r = x.left.size + 1
-        if i == r:
-            return x
-        elif i < r:
-            return self.select(x.left, i)
+        if x.left is not None:
+            r = x.left.size + 1
+            if i == r:
+                return x
+            elif i < r:
+                return self.select(x.left, i)
+            else:
+                return self.select(x.right, i - r)
         else:
-            return self.select(x.right, i - r)
+            return x
 
-    def rank(self, x):
-        pass
+    def rank(self, x: Optional["Node"]) -> int:
+        r = x.left.size + 1
+        y = x
+        while y != self.root:
+            if y == y.parent.right:
+                r += y.parent.left.size + 1
+            y = y.parent
+        return r
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     b = OrderStatTree()
     b.insert(50, 'This is fifty')
     b.insert(10, 'This is ten')
@@ -259,10 +284,15 @@ if __name__=='__main__':
 
     b.inorder_walk(b.root)
     print('Insertion completed')
-    
-    node_to_delete = b.search(30)
-    b.delete(node_to_delete)
-    print(f'Deleting the next element: {node_to_delete.key}')
-    
-    b.inorder_walk(b.root)
-    
+
+    # node_to_delete = b.search(30)
+    # b.delete(node_to_delete)
+    # print(f'Deleting the next element: {node_to_delete.key}')
+
+    # b.inorder_walk(b.root)
+
+    # print(b.select(b.root, 3))
+
+    print(b.root.left.left.size, b.root.left.left.key)
+    # print(b.root.left.key, '__________________', b.root.right.key)
+    # print(b.root.left.left.right.key, '__________________', b.root.left.right.left.key)
