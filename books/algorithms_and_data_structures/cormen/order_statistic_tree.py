@@ -134,7 +134,7 @@ class OrderStatTree:
             deleting_node.parent.right = replacing_node
         replacing_node.parent = deleting_node.parent
         # size support
-        replacing_node.size = deleting_node.size - 1
+        replacing_node.size = deleting_node.size
 
     def minimum(self, x: Optional["Node"]) -> Optional["Node"]:
         """the method returns a pointer to the minimum element of the subtree"""
@@ -146,13 +146,31 @@ class OrderStatTree:
         y = deleting_node
         y_origin_color = y.color
         if deleting_node.left == self.null:
+            # size support
+            z = y
+            while z != self.root:
+                z.size -= 1
+                z = z.parent
+                
             x = deleting_node.right
             self.transplant(deleting_node, deleting_node.right)
         elif deleting_node.right == self.null:
+            # size support
+            z = y.parent
+            while z != self.root:
+                z.size -= 1
+                z = z.parent
+                
             x = deleting_node.left
             self.transplant(deleting_node, deleting_node.left)
         else:
             y = self.minimum(deleting_node.right)
+            # size support
+            z = y.parent
+            while z != self.root:
+                z.size -= 1
+                z = z.parent
+            
             y_origin_color = y.color
             x = y.right
             if y.parent == deleting_node:
@@ -170,9 +188,7 @@ class OrderStatTree:
             self.delete_fixup(x)
 
         # size support
-        while y != self.root:
-            y = y.parent
-            y.size -= 1
+        self.root.size -= 1
 
     def delete_fixup(self, x: Optional["Node"]) -> None:
         """the method is necessary to preserve the red-black properties after deleting"""
@@ -285,51 +301,53 @@ if __name__ == '__main__':
     b.inorder_walk(b.root)
     print('Insertion completed')
 
-    node_to_delete = b.search(10)
+    node_to_delete = b.search(15)
     b.delete(node_to_delete)
     print(f'Deleting the next element: {node_to_delete.key}')
 
-    b.inorder_walk(b.root)
+    # b.inorder_walk(b.root)
 
     print(b.select(b.root, 3).key)
 
-    # building a tree
-    print(6*'\t' + f'Root of the tree: key {b.root.key}, size {b.root.size}')
+    def build_tree():
+        # building a tree
+        print(6*'\t' + f'Root of the tree: key {b.root.key}, size {b.root.size}')
+        
+        print(6*'\t' + '/' + 8*'\t' + '\\')
+        
+        print(5*'\t' + f'key {b.root.left.key}' + 8*'\t' +
+              f'key {b.root.right.key}')
+        print(5*'\t' + f'size {b.root.left.size}' + 8*'\t' +
+              f'size {b.root.right.size}')
+        
+        print(3*'\t' + '/' + 5*'\t' + '\\' + 4*'\t' + '/' + 5*'\t' + '\\')
+        
+        print(2*'\t' + f'key {b.root.left.left.key}' + 4*'\t' +
+              f'key {b.root.left.right.key}' + 4*'\t' +
+              f'key {b.root.right.left.key}' + 4*'\t' + 
+              f'key {b.root.right.right.key}')
+        print(2*'\t' + f'size {b.root.left.left.size}' + 4*'\t' +
+              f'size {b.root.left.right.size}' + 4*'\t' +
+              f'size {b.root.right.left.size}' + 4*'\t' + 
+              f'size {b.root.right.right.size}')
     
-    print(6*'\t' + '/' + 8*'\t' + '\\')
+        print(1*'\t' + '/' + 3*'\t' + '\\' + 2*'\t' + '/' + 3*'\t' + '\\' +
+              2*'\t' + '/' + 3*'\t' + '\\' + 2*'\t' + '/' + 3*'\t' + '\\')
     
-    print(5*'\t' + f'key {b.root.left.key}' + 8*'\t' +
-          f'key {b.root.right.key}')
-    print(5*'\t' + f'size {b.root.left.size}' + 8*'\t' +
-          f'size {b.root.right.size}')
-    
-    print(3*'\t' + '/' + 5*'\t' + '\\' + 4*'\t' + '/' + 5*'\t' + '\\')
-    
-    print(2*'\t' + f'key {b.root.left.left.key}' + 4*'\t' +
-          f'key {b.root.left.right.key}' + 4*'\t' +
-          f'key {b.root.right.left.key}' + 4*'\t' + 
-          f'key {b.root.right.right.key}')
-    print(2*'\t' + f'size {b.root.left.left.size}' + 4*'\t' +
-          f'size {b.root.left.right.size}' + 4*'\t' +
-          f'size {b.root.right.left.size}' + 4*'\t' + 
-          f'size {b.root.right.right.size}')
-
-    print(1*'\t' + '/' + 3*'\t' + '\\' + 2*'\t' + '/' + 3*'\t' + '\\' +
-          2*'\t' + '/' + 3*'\t' + '\\' + 2*'\t' + '/' + 3*'\t' + '\\')
-
-    print(f'key {b.root.left.left.left.key}' + 2*'\t' +
-          f'key {b.root.left.left.right.key}' + 1*'\t' +
-          f'key {b.root.left.right.left.key}' + 2*'\t' +
-          f'key {b.root.left.right.right.key}' + 2*'\t' +
-          f'key {b.root.right.left.left.key}' + 2*'\t' +
-          f'key {b.root.right.left.right.key}' + 1*'\t' +
-          f'key {b.root.right.right.left.key}' + 2*'\t' +
-          f'key {b.root.right.right.right.key}')
-    print(f'size {b.root.left.left.left.size}' + 2*'\t' +
-          f'size {b.root.left.left.right.size}' + 1*'\t' +
-          f'size {b.root.left.right.left.size}' + 2*'\t' +
-          f'size {b.root.left.right.right.size}' + 2*'\t' +
-          f'size {b.root.right.left.left.size}' + 2*'\t' +
-          f'size {b.root.right.left.right.size}' + 1*'\t' +
-          f'size {b.root.right.right.left.size}' + 2*'\t' +
-          f'size {b.root.right.right.right.size}')
+        print(f'key {b.root.left.left.left.key}' + 2*'\t' +
+              f'key {b.root.left.left.right.key}' + 1*'\t' +
+              f'key {b.root.left.right.left.key}' + 2*'\t' +
+              f'key {b.root.left.right.right.key}' + 2*'\t' +
+              f'key {b.root.right.left.left.key}' + 2*'\t' +
+              f'key {b.root.right.left.right.key}' + 1*'\t' +
+              f'key {b.root.right.right.left.key}' + 2*'\t' +
+              f'key {b.root.right.right.right.key}')
+        print(f'size {b.root.left.left.left.size}' + 2*'\t' +
+              f'size {b.root.left.left.right.size}' + 1*'\t' +
+              f'size {b.root.left.right.left.size}' + 2*'\t' +
+              f'size {b.root.left.right.right.size}' + 2*'\t' +
+              f'size {b.root.right.left.left.size}' + 2*'\t' +
+              f'size {b.root.right.left.right.size}' + 1*'\t' +
+              f'size {b.root.right.right.left.size}' + 2*'\t' +
+              f'size {b.root.right.right.right.size}')
+    build_tree()
