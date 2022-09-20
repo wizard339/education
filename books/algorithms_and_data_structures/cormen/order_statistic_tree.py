@@ -15,7 +15,7 @@ class Node:
 
 class OrderStatTree:
     def __init__(self) -> None:
-        self.null: Optional["Node"] = Node(key=0, data=None, color="black")
+        self.null: Optional["Node"] = Node(key=0, data=None, color="black", size=0)
         self.root: Optional["Node"] = self.null
 
     def left_rotate(self, x: Optional["Node"]) -> None:
@@ -56,7 +56,7 @@ class OrderStatTree:
         y.parent = x
         # size support
         x.size = y.size
-        y.size = x.right.size + y.right.size + 1
+        y.size = y.left.size + y.right.size + 1
 
     def insert(self, key: Any, data: Any) -> None:
         new_node = Node(key=key, data=data)
@@ -133,6 +133,8 @@ class OrderStatTree:
         else:
             deleting_node.parent.right = replacing_node
         replacing_node.parent = deleting_node.parent
+        # size support
+        replacing_node.size = deleting_node.size - 1
 
     def minimum(self, x: Optional["Node"]) -> Optional["Node"]:
         """the method returns a pointer to the minimum element of the subtree"""
@@ -164,15 +166,13 @@ class OrderStatTree:
             y.left.parent = y
             y.color = deleting_node.color
 
+        if y_origin_color == "black":
+            self.delete_fixup(x)
+
         # size support
         while y != self.root:
             y = y.parent
             y.size -= 1
-        else:
-            self.root.size -= 1
-
-        if y_origin_color == "black":
-            self.delete_fixup(x)
 
     def delete_fixup(self, x: Optional["Node"]) -> None:
         """the method is necessary to preserve the red-black properties after deleting"""
@@ -285,14 +285,51 @@ if __name__ == '__main__':
     b.inorder_walk(b.root)
     print('Insertion completed')
 
-    # node_to_delete = b.search(30)
-    # b.delete(node_to_delete)
-    # print(f'Deleting the next element: {node_to_delete.key}')
+    node_to_delete = b.search(10)
+    b.delete(node_to_delete)
+    print(f'Deleting the next element: {node_to_delete.key}')
 
-    # b.inorder_walk(b.root)
+    b.inorder_walk(b.root)
 
-    # print(b.select(b.root, 3))
+    print(b.select(b.root, 3).key)
 
-    print(b.root.left.left.size, b.root.left.left.key)
-    # print(b.root.left.key, '__________________', b.root.right.key)
-    # print(b.root.left.left.right.key, '__________________', b.root.left.right.left.key)
+    # building a tree
+    print(6*'\t' + f'Root of the tree: key {b.root.key}, size {b.root.size}')
+    
+    print(6*'\t' + '/' + 8*'\t' + '\\')
+    
+    print(5*'\t' + f'key {b.root.left.key}' + 8*'\t' +
+          f'key {b.root.right.key}')
+    print(5*'\t' + f'size {b.root.left.size}' + 8*'\t' +
+          f'size {b.root.right.size}')
+    
+    print(3*'\t' + '/' + 5*'\t' + '\\' + 4*'\t' + '/' + 5*'\t' + '\\')
+    
+    print(2*'\t' + f'key {b.root.left.left.key}' + 4*'\t' +
+          f'key {b.root.left.right.key}' + 4*'\t' +
+          f'key {b.root.right.left.key}' + 4*'\t' + 
+          f'key {b.root.right.right.key}')
+    print(2*'\t' + f'size {b.root.left.left.size}' + 4*'\t' +
+          f'size {b.root.left.right.size}' + 4*'\t' +
+          f'size {b.root.right.left.size}' + 4*'\t' + 
+          f'size {b.root.right.right.size}')
+
+    print(1*'\t' + '/' + 3*'\t' + '\\' + 2*'\t' + '/' + 3*'\t' + '\\' +
+          2*'\t' + '/' + 3*'\t' + '\\' + 2*'\t' + '/' + 3*'\t' + '\\')
+
+    print(f'key {b.root.left.left.left.key}' + 2*'\t' +
+          f'key {b.root.left.left.right.key}' + 1*'\t' +
+          f'key {b.root.left.right.left.key}' + 2*'\t' +
+          f'key {b.root.left.right.right.key}' + 2*'\t' +
+          f'key {b.root.right.left.left.key}' + 2*'\t' +
+          f'key {b.root.right.left.right.key}' + 1*'\t' +
+          f'key {b.root.right.right.left.key}' + 2*'\t' +
+          f'key {b.root.right.right.right.key}')
+    print(f'size {b.root.left.left.left.size}' + 2*'\t' +
+          f'size {b.root.left.left.right.size}' + 1*'\t' +
+          f'size {b.root.left.right.left.size}' + 2*'\t' +
+          f'size {b.root.left.right.right.size}' + 2*'\t' +
+          f'size {b.root.right.left.left.size}' + 2*'\t' +
+          f'size {b.root.right.left.right.size}' + 1*'\t' +
+          f'size {b.root.right.right.left.size}' + 2*'\t' +
+          f'size {b.root.right.right.right.size}')
