@@ -266,18 +266,16 @@ class OrderStatTree:
         the method searches for an element with the i-rank and returns a pointer to the node
         with the i-th element in ascending order in the subtree, where x is the root
         """
-        if x.left is not None:
-            r = x.left.size + 1
-            if i == r:
-                return x
-            elif i < r:
-                return self.select(x.left, i)
-            else:
-                return self.select(x.right, i - r)
-        else:
+        r = x.left.size + 1
+        if i == r:
             return x
+        elif i < r:
+            return self.select(x.left, i)
+        else:
+            return self.select(x.right, i - r)
 
     def rank(self, x: Optional["Node"]) -> int:
+        """the method returns the rank of the element"""
         r = x.left.size + 1
         y = x
         while y != self.root:
@@ -305,9 +303,9 @@ if __name__ == '__main__':
     b.delete(node_to_delete)
     print(f'Deleting the next element: {node_to_delete.key}')
 
-    # b.inorder_walk(b.root)
+    print(f'The 3-rd element: {b.select(b.root, 3).key}')
 
-    print(b.select(b.root, 3).key)
+    print(f'The rank for the element with key=40: {b.rank(b.search(40))}')
 
     def build_tree():
         # building a tree
