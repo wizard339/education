@@ -59,8 +59,8 @@ class IntervalTree:
         x.right = y
         y.parent = x
         # attribute 'max' support
-        x.max = max(x.high, x.left.max, x.right.max)
-        y.max = max(y.high, y.left.max, y.right.max)
+        x.max = max(x.high, x.left.high, x.right.high)
+        y.max = max(y.high, y.left.high, y.right.high)
     
     def insert(self, interval: Union["list", "tuple"]) -> None:
         new_node = Node(interval=interval, low=interval[0], high=interval[1], max=interval[1])
@@ -145,31 +145,33 @@ class IntervalTree:
     def delete(self, deleting_node: Optional["Node"]) -> None:
         y = deleting_node
         y_origin_color = y.color
-        if deleting_node.left == self.null:
-            # size support
-            z = y
-            while z != self.root:
-                z.max = max(z.max, z.left.max, z.right.max)
-                z = z.parent
-                
+        if deleting_node.left == self.null:                
             x = deleting_node.right
             self.transplant(deleting_node, deleting_node.right)
-        elif deleting_node.right == self.null:
             # size support
-            z = y
+            if x != self.null:
+                z = x
+            else:
+                z = x.parent
             while z != self.root:
-                z.max = max(z.max, z.left.max, z.right.max)
+                z.max = max(z.high, z.left.max, z.right.max)
                 z = z.parent
-                
+            z.max = max(z.high, z.left.max, z.right.max)    
+            print('if')
+        elif deleting_node.right == self.null:
             x = deleting_node.left
             self.transplant(deleting_node, deleting_node.left)
-        else:
             # size support
-            z = y
+            if x != self.null:
+                z = x
+            else:
+                z = x.parent
             while z != self.root:
-                z.max = max(z.max, z.left.max, z.right.max)
+                z.max = max(z.high, z.left.max, z.right.max)
                 z = z.parent
-                
+            z.max = max(z.high, z.left.max, z.right.max)
+            print('elif')
+        else:
             y = self.minimum(deleting_node.right)
             y_origin_color = y.color
             x = y.right
@@ -183,6 +185,16 @@ class IntervalTree:
             y.left = deleting_node.left
             y.left.parent = y
             y.color = deleting_node.color
+            # size support
+            if x != self.null:
+                z = x
+            else:
+                z = x.parent
+            while z != self.root:
+                z.max = max(z.high, z.left.max, z.right.max)
+                z = z.parent
+            z.max = max(z.high, z.left.max, z.right.max)
+            
         if y_origin_color == "black":
             self.delete_fixup(x)
 
@@ -273,11 +285,17 @@ if __name__=='__main__':
     print('Insertion completed')
 
 
-    # node_to_delete = b.search(30)
-    # b.delete(node_to_delete)
-    # print(f'Deleting the next element: {node_to_delete.interval}')
+    node_to_delete = b.search(15)
+    b.delete(node_to_delete)
+    print(f'Deleting the next element: {node_to_delete.interval}')
     
-    # b.inorder_walk(b.root)
+    b.inorder_walk(b.root)
+
+    node_to_delete = b.search(70)
+    b.delete(node_to_delete)
+    print(f'Deleting the next element: {node_to_delete.interval}')
+    
+    b.inorder_walk(b.root)
 
 
     def build_tree():
