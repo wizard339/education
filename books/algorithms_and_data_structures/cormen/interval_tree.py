@@ -145,32 +145,25 @@ class IntervalTree:
     def delete(self, deleting_node: Optional["Node"]) -> None:
         y = deleting_node
         y_origin_color = y.color
+        # define the support function for the support 'max' attribute
+        def max_support(x):
+            if x != self.null:
+                z = x
+            else:
+                z = x.parent
+            while z != self.root:
+                z.max = max(z.high, z.left.max, z.right.max)
+                z = z.parent
+            z.max = max(z.high, z.left.max, z.right.max) 
+            
         if deleting_node.left == self.null:                
             x = deleting_node.right
             self.transplant(deleting_node, deleting_node.right)
-            # size support
-            if x != self.null:
-                z = x
-            else:
-                z = x.parent
-            while z != self.root:
-                z.max = max(z.high, z.left.max, z.right.max)
-                z = z.parent
-            z.max = max(z.high, z.left.max, z.right.max)    
-            print('if')
+            max_support(x)
         elif deleting_node.right == self.null:
             x = deleting_node.left
             self.transplant(deleting_node, deleting_node.left)
-            # size support
-            if x != self.null:
-                z = x
-            else:
-                z = x.parent
-            while z != self.root:
-                z.max = max(z.high, z.left.max, z.right.max)
-                z = z.parent
-            z.max = max(z.high, z.left.max, z.right.max)
-            print('elif')
+            max_support(x)
         else:
             y = self.minimum(deleting_node.right)
             y_origin_color = y.color
@@ -185,16 +178,7 @@ class IntervalTree:
             y.left = deleting_node.left
             y.left.parent = y
             y.color = deleting_node.color
-            # size support
-            if x != self.null:
-                z = x
-            else:
-                z = x.parent
-            while z != self.root:
-                z.max = max(z.high, z.left.max, z.right.max)
-                z = z.parent
-            z.max = max(z.high, z.left.max, z.right.max)
-            
+            max_support(x)
         if y_origin_color == "black":
             self.delete_fixup(x)
 
