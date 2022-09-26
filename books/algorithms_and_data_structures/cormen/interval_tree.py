@@ -17,7 +17,7 @@ class Node:
     max: float = high
 
 
-class RedBlackTree:
+class IntervalTree:
     def __init__(self) -> None:
         self.null: Optional["Node"] = Node(color="black")
         self.root: Optional["Node"] = self.null
@@ -40,8 +40,8 @@ class RedBlackTree:
         # placing x as the left child node
         x.parent = y
         # attribute 'max' support
-        x.max = max(x.max, x.left.max, x.right.max)
-        y.max = max(y.max, y.left.max, y.right.max)
+        x.max = max(x.high, x.left.max, x.right.max)
+        y.max = max(y.high, y.left.max, y.right.max)
             
     def right_rotate(self, y: Optional["Node"]) -> None:
         """the method is needed to save property of the black-red tree"""
@@ -59,8 +59,8 @@ class RedBlackTree:
         x.right = y
         y.parent = x
         # attribute 'max' support
-        x.max = max(x.max, x.left.max, x.right.max)
-        y.max = max(y.max, y.left.max, y.right.max)
+        x.max = max(x.high, x.left.max, x.right.max)
+        y.max = max(y.high, y.left.max, y.right.max)
     
     def insert(self, interval: Union["list", "tuple"]) -> None:
         new_node = Node(interval=interval, low=interval[0], high=interval[1], max=interval[1])
@@ -125,7 +125,6 @@ class RedBlackTree:
                     new_node.parent.parent.color = "red"
                     self.left_rotate(new_node.parent.parent)
         self.root.color = "black"
-
 
     def transplant(self, deleting_node: Optional["Node"], replacing_node: Optional["Node"]) -> None:
         """the method is needed to replace one subtree with another subtree"""
@@ -260,7 +259,7 @@ class RedBlackTree:
 
 
 if __name__=='__main__':
-    b = RedBlackTree()
+    b = IntervalTree()
     b.insert([50, 75])
     b.insert([10, 34])
     b.insert([70, 76])
