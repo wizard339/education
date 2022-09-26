@@ -253,6 +253,16 @@ class IntervalTree:
                 current = current.right
         return current
 
+    def interval_search(self, i: Union["list", "tuple"]) -> Optional["Node"]:
+        """the method returns a pointer to a node with an interval that intersects the interval i"""
+        x = self.root
+        while (x != self.null) and ((x.high < i[0]) or (x.low > i[1])):
+            if x.left != self.null and x.left.max >= i[0]:
+                x = x.left
+            else:
+                x = x.right
+        return x
+    
 
 if __name__=='__main__':
     b = IntervalTree()
@@ -311,3 +321,6 @@ if __name__=='__main__':
         print(9*'\t' + f'max {b.root.left.right.right.max}')
         
     build_tree()
+
+    print(b.interval_search([76, 90]).interval)
+    
