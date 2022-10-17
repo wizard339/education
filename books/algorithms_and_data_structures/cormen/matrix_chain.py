@@ -2,11 +2,14 @@ import sys
 
 
 def matrix_chain_order(p: list) -> tuple:
+    """function for finding the most efficient way of multiplication"""
     n = len(p)
-
+    # the array with a minimum number of multiplications (it's equal to zero when multiplying a single matrix)
     m = [[0 for x in range(n + 1)] for y in range((n + 1))]
+    # the array where indexes of the split positions (insertions of parenthesis) are stored
     s = [[None for x in range(n + 1)] for y in range((n + 1))]
 
+    # the lenth of the subsequence
     for lnt in range(2, n + 1):
         
         for i in range(1, n - lnt + 2):
