@@ -47,7 +47,7 @@ def print_optimal_parens(s: list, i: int, j: int) -> str:
 
 
 if __name__ == "__main__":
-    a = [30, 35, 15, 5, 10, 20, 25]
+    a = [30, 35, 15, 5, 10, 20]
     print(f'The minimum cost of multiplying a chain of matrices is {matrix_chain_multiply(a)}.')
     b = matrix_chain_order(a)[1]
     print('The optimal placement of parenthesis:')
