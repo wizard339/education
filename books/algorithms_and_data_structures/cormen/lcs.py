@@ -19,7 +19,7 @@ def lcs_length(x: list, y: list) -> int:
                 
             else:
                 c[i][j] = c[i][j - 1]
-    return c
+    return c, c[m][n]
 
 
 if __name__=='__main__':
