@@ -1,2 +1,5 @@
-Аn algorithm for content-oriented image resizing designed by S. Avidan and A. Shamir
+Аn algorithm for content-oriented image resizing designed by S. Avidan and A. Shamir:
 https://ru.zahn-info-portal.de/wiki/Seam_carving
+
+About dynamic programming:
+https://habr.com/ru/post/191498/
