@@ -19,6 +19,11 @@ class Stack:
             self.top -= 1
             return self.stack.pop()
 
+    def multipop(self, k):
+        while self.stack_empty()==False and k > 0:
+            self.pop()
+            k -= 1
+
 
 if __name__=='__main__':
     b = Stack()
@@ -30,4 +35,6 @@ if __name__=='__main__':
     print(b.top)
     b.push(5)
     b.push(5)
+    print(b.top)
+    b.multipop(3)
     print(b.top)
